@@ -1,0 +1,43 @@
+const FOLLOW_BUTTON_TEXT = "Seguir";
+const MAX_ATTEMPTS_PER_FOLLOW = 3; 
+
+const followSomebody = () => {
+  const followButtons = Array.from(document.querySelectorAll("button")).filter(
+    (el) => el.textContent === `${FOLLOW_BUTTON_TEXT}`
+  );
+  while (followButtons && followButtons.length > 0) {
+    let attempts = 1;
+    if (attempts < MAX_ATTEMPTS_PER_FOLLOW) {
+      // grab the first button, shrink the array
+      const targetFollowButton = followButtons.shift();
+      console.log("Encontrei o botão de segui. Trampos on ...");
+      targetFollowButton.scrollIntoView(true);
+      targetFollowButton.click();
+    } else {
+      console.log(
+        `Tentei ${MAX_ATTEMPTS_PER_FOLLOW} vezes e não consegui`
+      );
+    }
+    return false;
+  }
+  return true;
+};
+
+const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const randomTimeout = () => Math.floor(Math.random() * 10 + 1) * 1000 + 60000;
+
+const followEveryone = async () => {
+  let shouldStop = false;
+  while (!shouldStop) {
+    shouldStop = followSomebody();
+    const followTimeout = randomTimeout();
+    console.log(
+      `Esperando ${followTimeout} segundos. Deveria parar: ${shouldStop}.`
+    );
+    await timeout(followTimeout);
+  }
+  console.log("Não é possível seguir mais ninguém.");
+};
+
+followEveryone();
